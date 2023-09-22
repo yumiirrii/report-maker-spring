@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+.float {
+    display: flex;
+}
+
+.float input[type="submit"] {
+    margin: 30px 0 7px 20px;
+}
+
+#project-delete-btn {
+    margin: 10px 30px;
+}
+
+#confirm-summary input[type="submit"] {
+    margin: 10px 30px;
+}
+
+

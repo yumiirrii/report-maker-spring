@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+html,body {
+    font-family: Avenir;
+    background: #e7d491ff;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+}
+
+input[type="submit"] {
+    color: #e7d491ff;
+    text-align: center;
+    font-size: 18px;
+    font-family: Avenir;
+    font-weight: bold;
+    background: #222222;
+    background-clip: padding-box;
+    border: 3px solid #222222;
+    border-radius: 5px;
+    width: 18%;
+    display: block;
+    padding: 10px 0px;
+    margin: 10px auto;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    color: #222222;
+    background: #e7d491ff;
+    border-color: #222222;
+}
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/search.css">
+</head>
+<body>
+<div class="search">
+    <div class="accordion">
+        <form method="post" th:action="@{/delete}">
+            <div class="accordion-item" th:each="reportFormMonthly : ${reportFormMonthlyMap}">
+                <div class="accordion-header" th:text="${reportFormMonthly.key}"></div>
+                <div class="accordion-content">
+                    <ul class="checkbox-ul">
+                        <li th:each="reportForm : ${reportFormMonthly.value}">
+                            <input type="checkbox" class="checkbox-item" th:value="${reportForm.id}" />
+                            <span class="checkmark"></span>
+                            <a th:href="@{'/detail/' + ${reportForm.id}}"><span th:text="${reportForm.week}"></span></a>
+                        </li>
+                    </ul>
+                    <input type="hidden" class="selected-item" id="deleteReportIds" name="deleteReportIds" value="" />
+                    <input type="submit" value="DELETE" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <form method="get" th:action="@{/}">
+        <input type="submit" value="BACK TO TOP"></input>
+    </form>
+</div>
+<script type="module" src="/js/search.js"></script>
+</body>
+</html>

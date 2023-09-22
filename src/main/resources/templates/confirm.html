@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/confirm.css">
+</head>
+<body>
+<div class="input">
+    <div th:object="${reportForm}">
+        <h2>WEEK</h2>
+            <p th:text="*{week}"></p>
+            <form method="post" th:action="@{/confirm/changeweek}" th:if="${weekDuplicateError}">
+                <p class="warning">week is duplicated.</p>
+                <input type="week" name="inputWeek" />
+                <input type="submit" value="ENTER">
+            </form>
+        <div class="float">
+            <h2>PROJECTS</h2>
+            <form method="post" th:action="@{/confirm/addProject}">
+                <input type="submit" value="ADD PROJECT & TASKS"/>
+            </form>
+        </div>
+        <p th:if="${projectBlank}" class="warning">project input is required.</p>
+        <form th:if="*{projectList != null && !projectList.isEmpty()}" method="post" th:action="@{/confirm/deleteProjectAndTasks}">
+            <ul class="checkbox-ul">
+                <li th:each="project : *{projectList}">
+                    <input type="checkbox" class="checkbox-item" th:value="${project}"/>
+                    <span class="checkmark"></span>
+                    <span th:text="${project}"></span>
+                </li>
+            </ul>
+            <input type="hidden" class="selected-item" id="deleteProjectAndTasks" name="deleteProjectAndTasks" value="" />
+            <input id="project-delete-btn" type="submit" value="DELETE"/>
+        </form>
+        <h2>TASKS</h2>
+            <p class="bold">TASKS DONE THIS WEEK</p>
+            <div class="task-list" th:each="doneTaskMap : *{doneTaskMapList}">
+                <ul>
+                    <li th:each="doneTaskMap : ${doneTaskMap}">
+                        <span th:text="${doneTaskMap.key}"></span>
+                        <ul>
+                            <li th:each="doneTask : ${doneTaskMap.value}">
+                                <span th:text="${doneTask}"></span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <p class="bold">TASKS PLANNED TO DO NEXT WEEK</p>
+            <div class="task-list" th:each="planningTaskMap : *{planningTaskMapList}">
+                <ul>
+                    <li th:each="planningTaskMap : ${planningTaskMap}">
+                        <span th:text="${planningTaskMap.key}"></span>
+                        <ul th:each="planningTask : ${planningTaskMap.value}">
+                            <li th:text="${planningTask}"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        <h2>SUMMARY</h2>
+            <div id="confirm-summary">
+                <p id="summary-text" th:text="*{summary}"></p>
+                <input id="edit-btn" type="submit" value="EDIT">
+            </div>
+            <div id="edit-summary">
+                <form method="post" th:action="@{/confirm/editSummary}">
+                    <textarea id="input-summary" name="input-summary" rows="10" cols="80"></textarea>
+                    <span id="text-length">1000</span>
+                    <div class="register">
+                        <input id="register-btn" type="submit" value="CONFIRM" />
+                    </div>
+                </form>
+            </div>
+        </form>
+        <form method="post" th:action="@{/confirm/submit}">
+            <div class="register">
+                <input id="submit-btn" class="register-btn" type="submit" value="SUBMIT REPORT">
+            </div>
+        </form>
+        <div id="confirm-modal" th:if="${isSucceeded}">
+            <p class="modal_mask"></p>
+            <div class="modal_content">
+                <form method="get" th:action="@{/}">
+                    <p>Report was submitted!</p>
+                    <input type="submit" value="BACK TO TOP">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    let result = [[${isSucceeded}]];
+</script>
+<script type="module" src="/js/confirm.js"></script>
+</body>
+</html>

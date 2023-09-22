@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Input</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/input.css">
+</head>
+<body>
+<div class="input">
+    <h2>WEEK</h2>
+        <form method="post" th:action="@{/input/addWeek}" th:if="${week == null}">
+            <input type="week" name="inputWeek" />
+            <input type="submit" value="ENTER">
+        </form>
+        <p th:text="${week}"></p>
+        <p th:if="${weekError}" class="warning">week input is required.</p>
+    <th:block th:if="${week != null}">
+        <h2>WORKING PROJECT</h2>
+            <form method="post" th:action="@{/input/addProject}" th:if="${project == null}">
+                <input type="text" name="inputProject" />
+                <input type="submit" value="ENTER" />
+            </form>
+            <p th:text="${project}"></p>
+            <p th:if="${projectBlank}" class="warning">project input is required.</p>
+            <p th:if="${projectDupe}" class="warning">project is duplicated.</p>
+    </th:block>
+    <th:block th:if="${project != null}">
+        <h2>TASKS DONE THIS WEEK</h2>
+            <ul>
+                <li th:each="doneTask : ${doneTaskList}">
+                    <span th:text="${doneTask}"></span>
+                </li>
+            </ul>
+            <form id="options" method="post" th:action="@{/input/addLastPlanningTask}" th:if="${lastPlanningTaskList != null && !lastPlanningTaskList.isEmpty()}">
+                <p>Options</p>
+                <ul class="checkbox-ul">
+                    <li th:each="lastPlanningTask : ${lastPlanningTaskList}">
+                        <input type="checkbox" class="checkbox-item" th:value="${lastPlanningTask}"/>
+                        <span class="checkmark"></span>
+                        <span th:text="${lastPlanningTask}"></span>
+                    </li>
+                </ul>
+                <input type="hidden" class="selected-item" id="selectedLastPlanningTasks" name="selectedLastPlanningTasks" value="" />
+                <input type="submit" value="DONE" />
+            </form>
+            <form method="post" th:action="@{/input/addDoneTask}" th:if="${isDoneTaskExist}">
+                <input type="text" name="inputDoneTask" />
+                <input type="checkbox" class="checkbox-item" name="isNoneChecked" value="true" />
+                <span class="checkmark"></span>
+                <span>no task done</span>
+                <br>
+                <input id="done-enter-btn" type="submit" value="ENTER" />
+            </form>
+            <p th:if="${dupeDoneTask}" class="warning">task is duplicated.</p>
+    </th:block>
+    <th:block th:if="${doneTaskList != null && !doneTaskList.isEmpty()}">
+        <h2>TASKS PLANNED TO DO NEXT WEEK</h2>
+            <ul>
+                <li th:each="planningTask : ${planningTaskList}">
+                    <span th:text="${planningTask}"></span>
+                </li>
+            </ul>
+            <form method="post" th:action="@{/input/addPlanningTask}">
+                <input type="text" name="inputPlanningTask" />
+                <input type="submit" value="ENTER" />
+            </form>
+            <p th:if="${dupePlanningTask}" class="warning">task is duplicated.</p>
+        <div class="register">
+            <input id="register-tasks-btn" type="submit" value="REGISTER PROJECT & TASKS" />
+        </div>
+    </th:block>
+    <div id="modal">
+        <p class="modal_mask"></p>
+        <div class="modal_content">
+            <form method="post" th:action="@{/input/registerProjectAndTask}">
+                <p>Do you have any other project working on?</p>
+                <input class="yes-no-btn" type="submit" name="method" value="NO" />
+                <input class="yes-no-btn" type="submit" name="method" value="YES" />
+            </form>
+        </div>
+    </div>
+</div>
+<script type="module" src="/js/input.js"></script>
+</body>
+</html>

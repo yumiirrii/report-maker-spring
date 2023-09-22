@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/top.css">
+</head>
+<body>
+    <div id="top">
+        <h1>WEEKLY REPORT</h1>
+        <form method="post" th:action="@{/input}">
+            <input type="submit" name="menu" value="INPUT">
+            <input type="submit" name="menu" value="SEARCH">
+        </form>
+    </div>
+</body>
+</html>

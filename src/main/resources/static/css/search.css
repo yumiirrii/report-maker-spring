@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+.accordion {
+    width: 60%;
+}
+
+.accordion-item {
+    border: 1px solid #222222;
+    margin-bottom: 10px;
+}
+
+.accordion-header {
+    padding: 10px;
+    background-color: #222222;
+    color: #e7d491ff;
+    cursor: pointer;
+}
+
+.accordion-content {
+    display: none;
+    padding: 10px;
+}
+
+.accordion-content input[type="submit"] {
+    margin: 0px 0px 10px 45px;
+}

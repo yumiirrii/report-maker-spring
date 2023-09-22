@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.reportmaker.mapper.TaskMapper">
+<resultMap id="taskResultMap" type="com.example.reportmaker.domain.Task">
+    <id property="id" column="id" />
+    <result property="reportId" column="report_id" />
+    <result property="projectId" column="project_id" />
+    <result property="task" column="task" />
+    <result property="isDone" column="is_done" />
+</resultMap>
+
+    <insert id="insertTask">
+        INSERT INTO task(report_id, project_id, task, is_done)
+        VALUES(#{reportId}, #{projectId}, #{task}, #{isDone})
+    </insert>
+
+    <update id="updateReportId">
+        UPDATE task SET report_id = #{reportId} WHERE project_id = #{projectId};
+    </update>
+
+    <select id="selectTaskListByProjectId" resultMap="taskResultMap">
+        SELECT * FROM task WHERE project_id = #{projectId}
+    </select>
+
+    <delete id="deleteTaskByReportId">
+        DELETE FROM task WHERE report_id = #{reportId}
+    </delete>
+</mapper>

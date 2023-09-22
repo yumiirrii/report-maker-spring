@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Input</title>
+    <link rel="stylesheet" href="/css/common.css">
+</head>
+<body>
+<div class="input">
+    <h2>SUMMARY</h2>
+        <form method="post" th:action="@{/input/confirm}">
+            <textarea id="input-summary" name="input-summary" rows="10" cols="80"></textarea>
+            <span id="text-length">1000</span>
+            <div class="register">
+                <input type="submit" value="CONFIRMATION" />
+            </div>
+        </form>
+</div>
+<script type="module" src="/js/input-summary.js"></script>
+</body>
+</html>

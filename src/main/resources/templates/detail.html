@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+    <link rel="stylesheet" href="/css/common.css">
+</head>
+<body>
+<div class="search">
+    <div th:object="${reportForm}">
+        <h2>WEEK</h2>
+            <p th:text="*{week}"></p>
+        <h2>PROJECTS</h2>
+            <ul>
+                <li th:each="project : *{projectList}">
+                    <span th:text="${project}"></span>
+                </li>
+            </ul>
+        <h2>TASKS</h2>
+            <p class="bold">TASKS DONE THIS WEEK</p>
+            <div class="task-list" th:each="doneTaskMap : *{doneTaskMapList}">
+                <ul>
+                    <li th:each="doneTaskMap : ${doneTaskMap}">
+                        <span th:text="${doneTaskMap.key}"></span>
+                        <ul>
+                            <li th:each="doneTask : ${doneTaskMap.value}">
+                                <span th:text="${doneTask}"></span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <p class="bold">TASKS PLANNED TO DO NEXT WEEK</p>
+            <div class="task-list" th:each="planningTaskMap : *{planningTaskMapList}">
+                <ul>
+                    <li th:each="planningTaskMap : ${planningTaskMap}">
+                        <span th:text="${planningTaskMap.key}"></span>
+                        <ul th:each="planningTask : ${planningTaskMap.value}">
+                            <li th:text="${planningTask}"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        <h2>SUMMARY</h2>
+            <p th:text="*{summary}"></p>
+        <form method="get" th:action="@{/}">
+            <input type="submit" value="BACK TO TOP"></input>
+        </form>
+    </div>
+</div>
+</body>
+</html>
