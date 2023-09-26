@@ -46,13 +46,15 @@
             </form>
             <form method="post" th:action="@{/input/addDoneTask}" th:if="${isDoneTaskExist}">
                 <input type="text" name="inputDoneTask" />
-                <input type="checkbox" class="checkbox-item" name="isNoneChecked" value="true" />
-                <span class="checkmark"></span>
-                <span>no task done</span>
-                <br>
-                <input id="done-enter-btn" type="submit" value="ENTER" />
+                <div class="no-task">
+                    <input type="checkbox" class="checkbox-item" name="isDoneTaskNoneChecked" value="true" />
+                    <span class="checkmark"></span>
+                    <span>no task done</span>
+                </div>
+                <input type="submit" value="ENTER" />
             </form>
-            <p th:if="${dupeDoneTask}" class="warning">task is duplicated.</p>
+            <p th:if="${doneTaskBlank}" class="warning">task input is required.</p>
+            <p th:if="${doneTaskDupe}" class="warning">task is duplicated.</p>
     </th:block>
     <th:block th:if="${doneTaskList != null && !doneTaskList.isEmpty()}">
         <h2>TASKS PLANNED TO DO NEXT WEEK</h2>
@@ -61,11 +63,17 @@
                     <span th:text="${planningTask}"></span>
                 </li>
             </ul>
-            <form method="post" th:action="@{/input/addPlanningTask}">
+            <form method="post" th:action="@{/input/addPlanningTask}" th:if="${isPlanningTaskExist}">
                 <input type="text" name="inputPlanningTask" />
+                <div class="no-task">
+                    <input type="checkbox" class="checkbox-item" name="isPlanningTaskNoneChecked" value="true" />
+                    <span class="checkmark"></span>
+                    <span>no task planned</span>
+                </div>
                 <input type="submit" value="ENTER" />
             </form>
-            <p th:if="${dupePlanningTask}" class="warning">task is duplicated.</p>
+            <p th:if="${planningTaskBlank}" class="warning">task input is required.</p>
+            <p th:if="${planningTaskDupe}" class="warning">task is duplicated.</p>
         <div class="register">
             <input id="register-tasks-btn" type="submit" value="REGISTER PROJECT & TASKS" />
         </div>

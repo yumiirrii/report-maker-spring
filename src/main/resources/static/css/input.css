@@ -18,6 +18,11 @@
     margin-left: 45px;
 }
 
+.no-task {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
 .yes-no-btn {
     margin-right: 5px;
 }

@@ -79,7 +79,9 @@ public class InputController {
             lastPlanningTaskList = new ArrayList<>();
             List<Task> planningTaskDtoList = reportService.getPlanningTaskByProjectName(this.inputProject);
             for (Task planningTaskDto : planningTaskDtoList) {
-                lastPlanningTaskList.add(planningTaskDto.getTask());
+                if (!(planningTaskDto.getTask().equals("none"))) {
+                    lastPlanningTaskList.add(planningTaskDto.getTask());
+                }
             }
             model.addAttribute("project", this.inputProject);
             model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
@@ -101,48 +103,64 @@ public class InputController {
         model.addAttribute("planningTaskList", inputPlanningTaskList);
         model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
         model.addAttribute("isDoneTaskExist", true);
+        model.addAttribute("isPlanningTaskExist", true);
         return "input";
     }
 
     @PostMapping(value="/input/addDoneTask")
-    public String test4(@RequestParam("inputDoneTask") String inputDoneTask, @RequestParam(name="isNoneChecked", defaultValue = "false") boolean isNoneChecked, Model model) {
-        if (isNoneChecked) {
-            inputDoneTaskList = null;
-            model.addAttribute("doneTaskList", "none");
+    public String test4(@RequestParam("inputDoneTask") String inputDoneTask, @RequestParam(name="isDoneTaskNoneChecked", defaultValue = "false") boolean isDoneTaskNoneChecked, Model model) {
+        if (isDoneTaskNoneChecked) {
+            inputDoneTaskList.clear();
+            inputDoneTaskList.add("none");
             model.addAttribute("isDoneTaskExist", false);
         } else {
             model.addAttribute("isDoneTaskExist", true);
-            if (inputDoneTaskList.contains(inputDoneTask)) {
-                model.addAttribute("dupeDoneTask", true);
+            model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
+            if (inputDoneTask == null || inputDoneTask.isEmpty()) {
+                model.addAttribute("doneTaskBlank", true);
+            } else if (inputDoneTaskList.contains(inputDoneTask)) {
+                model.addAttribute("doneTaskDupe", true);
             } else {
                 inputDoneTaskList.add(inputDoneTask);
-                model.addAttribute("doneTaskList", inputDoneTaskList);
-                model.addAttribute("planningTaskList", inputPlanningTaskList);
-                model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
             }
+        }
+        if (inputPlanningTaskList.contains("none")) {
+            model.addAttribute("isPlanningTaskExist", false);
+        } else {
+            model.addAttribute("isPlanningTaskExist", true);
         }
         model.addAttribute("week", reportForm.getWeek());
         model.addAttribute("project", inputProject);
+        model.addAttribute("doneTaskList", inputDoneTaskList);
+        model.addAttribute("planningTaskList", inputPlanningTaskList);
         return "input";
     }
 
     @PostMapping(value="/input/addPlanningTask")
-    public String test5(@RequestParam("inputPlanningTask") String inputPlanningTask, Model model) {
-        if (inputPlanningTaskList.contains(inputPlanningTask)) {
-            model.addAttribute("dupePlanningTask", true);
+    public String test5(@RequestParam("inputPlanningTask") String inputPlanningTask, @RequestParam(name="isPlanningTaskNoneChecked", defaultValue = "false") boolean isPlanningTaskNoneChecked, Model model) {
+        if (isPlanningTaskNoneChecked) {
+            inputPlanningTaskList.clear();
+            inputPlanningTaskList.add("none");
+            model.addAttribute("isPlanningTaskExist", false);
         } else {
-            inputPlanningTaskList.add(inputPlanningTask);
+            model.addAttribute("isPlanningTaskExist", true);
+            if (inputPlanningTask == null || inputPlanningTask.isEmpty()) {
+                model.addAttribute("planningTaskBlank", true);
+            } else if (inputPlanningTaskList.contains(inputPlanningTask)) {
+                model.addAttribute("planningTaskDupe", true);
+            } else {
+                inputPlanningTaskList.add(inputPlanningTask);
+            }
         }
-        if (inputDoneTaskList == null) {
-            model.addAttribute("doneTaskList", "none");
+        if (inputDoneTaskList.contains("none")) {
             model.addAttribute("isDoneTaskExist", false);
         } else {
-            model.addAttribute("doneTaskList", inputDoneTaskList);
             model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
             model.addAttribute("isDoneTaskExist", true);
         }
         model.addAttribute("week", reportForm.getWeek());
         model.addAttribute("project", inputProject);
+        model.addAttribute("doneTaskList", inputDoneTaskList);
         model.addAttribute("planningTaskList", inputPlanningTaskList);
         return "input";
     }

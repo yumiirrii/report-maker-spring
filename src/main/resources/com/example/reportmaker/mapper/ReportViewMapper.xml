@@ -53,6 +53,8 @@
             JOIN project p2 ON t2.project_id = p2.id
             WHERE t1.task = t2.task
             AND t2.is_done = 'true'
-        );
+            AND p2.name = #{name}
+        )
+        ORDER BY t1.id;
     </select>
 </mapper>
