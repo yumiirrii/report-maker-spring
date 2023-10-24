@@ -91,7 +91,7 @@ public class InputController {
     }
 
     @PostMapping(value="/input/addLastPlanningTask")
-    public String test3__4(@RequestParam(name="selectedLastPlanningTasks") String selectedLastPlanningTasks, Model model) {
+    public String test3_4(@RequestParam(name="selectedLastPlanningTasks") String selectedLastPlanningTasks, Model model) {
         String[] selectedLastPlanningTasksArray = selectedLastPlanningTasks.split(",");
         for (String selectedLastPlanningTask : selectedLastPlanningTasksArray) {
             lastPlanningTaskList.remove(selectedLastPlanningTask);
