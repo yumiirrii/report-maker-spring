@@ -1,6 +1,21 @@
 package com.example.reportmaker.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.reportmaker.domain.Project;
 import com.example.reportmaker.domain.Report;
 import com.example.reportmaker.domain.Task;
@@ -10,18 +25,6 @@ import com.example.reportmaker.mapper.ProjectMapper;
 import com.example.reportmaker.mapper.ReportMapper;
 import com.example.reportmaker.mapper.ReportViewMapper;
 import com.example.reportmaker.mapper.TaskMapper;
-import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @Service
 public class ReportService {
@@ -112,7 +115,7 @@ public class ReportService {
             return false;
         }
         Report report = getReportByWeek(reportForm.getWeek());
-
+        System.out.println("list:" + reportForm.getDoneTaskMapList());
         for(Map<String, List<String>> map : reportForm.getDoneTaskMapList()) {
             for(Project project : projectList) {
                 if(map.containsKey(project.getName())) {

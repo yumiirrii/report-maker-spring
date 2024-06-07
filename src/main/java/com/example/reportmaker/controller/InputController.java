@@ -1,20 +1,27 @@
 package com.example.reportmaker.controller;
 
-import com.example.reportmaker.domain.Task;
-import com.example.reportmaker.dto.ReportViewDto;
-import com.example.reportmaker.form.ReportForm;
-import com.example.reportmaker.service.ReportService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.example.reportmaker.domain.Task;
+import com.example.reportmaker.form.ReportForm;
+import com.example.reportmaker.service.ReportService;
 
-@Controller
+//@Controller
+@RestController
 public class InputController {
 
     @Autowired
@@ -29,10 +36,18 @@ public class InputController {
     List<Map<String, List<String>>> inputDoneTaskMapList;
     List<Map<String, List<String>>> inputPlanningTaskMapList;
 
+//    @GetMapping("/")
+//    public String top() {
+//        return "top";
+//    }
+    
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/")
-    public String top() {
-        return "top";
+    public List<ReportForm> top() {
+    	List<ReportForm> reportFormList = reportService.getAllReportView();
+    	return reportFormList;
     }
+    
 
     @PostMapping(value="/input")
     public String init(@RequestParam("menu") String menu, Model model) {
@@ -66,28 +81,42 @@ public class InputController {
         return "input";
     }
 
-    @PostMapping(value="/input/addProject")
-    public String test3(@RequestParam("inputProject") String inputProject, Model model) {
-        model.addAttribute("week", reportForm.getWeek());
-        if (inputProject == null || inputProject.isEmpty()) {
-            model.addAttribute("projectBlank", true);
-        } else if (inputProjectList.contains(inputProject)){
-            model.addAttribute("projectDupe", true);
-        } else {
-            this.inputProject = inputProject;
-            inputProjectList.add(this.inputProject);
-            lastPlanningTaskList = new ArrayList<>();
-            List<Task> planningTaskDtoList = reportService.getPlanningTaskByProjectName(this.inputProject);
-            for (Task planningTaskDto : planningTaskDtoList) {
-                if (!(planningTaskDto.getTask().equals("none"))) {
-                    lastPlanningTaskList.add(planningTaskDto.getTask());
-                }
-            }
-            model.addAttribute("project", this.inputProject);
-            model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
-            model.addAttribute("isDoneTaskExist", true);
-        }
-        return "input";
+//    @PostMapping(value="/input/addProject")
+//    public String test3(@RequestParam("inputProject") String inputProject, Model model) {
+//        model.addAttribute("week", reportForm.getWeek());
+//        if (inputProject == null || inputProject.isEmpty()) {
+//            model.addAttribute("projectBlank", true);
+//        } else if (inputProjectList.contains(inputProject)){
+//            model.addAttribute("projectDupe", true);
+//        } else {
+//            this.inputProject = inputProject;
+//            inputProjectList.add(this.inputProject);
+//            lastPlanningTaskList = new ArrayList<>();
+//            List<Task> planningTaskDtoList = reportService.getPlanningTaskByProjectName(this.inputProject);
+//            for (Task planningTaskDto : planningTaskDtoList) {
+//                if (!(planningTaskDto.getTask().equals("none"))) {
+//                    lastPlanningTaskList.add(planningTaskDto.getTask());
+//                }
+//            }
+//            model.addAttribute("project", this.inputProject);
+//            model.addAttribute("lastPlanningTaskList", lastPlanningTaskList);
+//            model.addAttribute("isDoneTaskExist", true);
+//        }
+//        return "input";
+//    }
+    
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping(value="/input/checktask")
+    public List<String> test3(@RequestBody Map<String, String> requestBody) {
+    	String projectName = requestBody.get("projectName");
+	    lastPlanningTaskList = new ArrayList<>();
+	    List<Task> planningTaskDtoList = reportService.getPlanningTaskByProjectName(projectName);
+	    for (Task planningTaskDto : planningTaskDtoList) {
+	        if (!(planningTaskDto.getTask().equals("none"))) {
+	            lastPlanningTaskList.add(planningTaskDto.getTask());
+	        }
+	    }
+	    return lastPlanningTaskList;
     }
 
     @PostMapping(value="/input/addLastPlanningTask")
@@ -200,22 +229,39 @@ public class InputController {
         model.addAttribute("reportForm", reportForm);
         return "confirm";
     }
-
+    
+//    @PostMapping(value="/confirm/submit")
+//    public String test8(Model model) {
+//        if (reportForm.getProjectList() == null || reportForm.getProjectList().isEmpty()) {
+//            model.addAttribute("projectBlank", true);
+//        } else {
+//            boolean result = reportService.registerWeeklyReport(reportForm);
+//            if (!result) {
+//                model.addAttribute("weekDuplicateError", true);
+//                model.addAttribute("isSucceeded", false);
+//            } else {
+//                model.addAttribute("isSucceeded", true);
+//            }
+//        }
+//        model.addAttribute("reportForm", reportForm);
+//        return "confirm";
+//    }
+    
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping(value="/confirm/submit")
-    public String test8(Model model) {
+    public ResponseEntity<Map<String, String>> test8(@RequestBody ReportForm reportForm) {
+    	Map<String, String> response = new HashMap<>();
         if (reportForm.getProjectList() == null || reportForm.getProjectList().isEmpty()) {
-            model.addAttribute("projectBlank", true);
+            response.put("message", "project null");
         } else {
             boolean result = reportService.registerWeeklyReport(reportForm);
             if (!result) {
-                model.addAttribute("weekDuplicateError", true);
-                model.addAttribute("isSucceeded", false);
+            	response.put("message", "week duplicated");
             } else {
-                model.addAttribute("isSucceeded", true);
+            	response.put("message", "succeeded");
             }
         }
-        model.addAttribute("reportForm", reportForm);
-        return "confirm";
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(value="/confirm/changeweek")
