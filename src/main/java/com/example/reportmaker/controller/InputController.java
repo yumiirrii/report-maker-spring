@@ -41,32 +41,40 @@ public class InputController {
 //        return "top";
 //    }
     
-    @CrossOrigin(origins = "http://localhost:5173")
-    @GetMapping("/")
-    public List<ReportForm> top() {
-    	List<ReportForm> reportFormList = reportService.getAllReportView();
-    	return reportFormList;
-    }
+//    @CrossOrigin(origins = "http://localhost:5173")
+//    @GetMapping("/")
+//    public List<ReportForm> top() {
+//    	List<ReportForm> reportFormList = reportService.getAllReportView();
+//    	return reportFormList;
+//    }
     
 
-    @PostMapping(value="/input")
-    public String init(@RequestParam("menu") String menu, Model model) {
-        if(menu.equals("INPUT")) {
-            reportForm = new ReportForm();
-            inputProject = null;
-            inputProjectList = new ArrayList<>();
-            inputDoneTaskList = new ArrayList<>();
-            inputPlanningTaskList = new ArrayList<>();
-            inputDoneTaskMapList = new ArrayList<>();
-            inputPlanningTaskMapList = new ArrayList<>();
-        }
-        if(menu.equals("SEARCH")) {
-            List<ReportForm> reportFormList = reportService.getAllReportView();
-            Map<String, List<ReportForm>> reportFormMonthlyMap = reportService.getAllReportViewMonthly(reportFormList);
-            model.addAttribute("reportFormMonthlyMap", reportFormMonthlyMap);
-            return "search";
-        }
-        return "input";
+//    @PostMapping(value="/input")
+//    public String init(@RequestParam("menu") String menu, Model model) {
+//        if(menu.equals("INPUT")) {
+//            reportForm = new ReportForm();
+//            inputProject = null;
+//            inputProjectList = new ArrayList<>();
+//            inputDoneTaskList = new ArrayList<>();
+//            inputPlanningTaskList = new ArrayList<>();
+//            inputDoneTaskMapList = new ArrayList<>();
+//            inputPlanningTaskMapList = new ArrayList<>();
+//        }
+//        if(menu.equals("SEARCH")) {
+//            List<ReportForm> reportFormList = reportService.getAllReportView();
+//            Map<String, List<ReportForm>> reportFormMonthlyMap = reportService.getAllReportViewMonthly(reportFormList);
+//            model.addAttribute("reportFormMonthlyMap", reportFormMonthlyMap);
+//            return "search";
+//        }
+//        return "input";
+//    }
+    
+    @CrossOrigin(origins = "http://localhost:5173")
+    @GetMapping("/search")
+    public Map<String, List<ReportForm>> search() {
+    	List<ReportForm> reportFormList = reportService.getAllReportView();
+        Map<String, List<ReportForm>> reportFormMonthlyMap = reportService.getAllReportViewMonthly(reportFormList);
+    	return reportFormMonthlyMap;
     }
 
     @PostMapping(value="/input/addWeek")
